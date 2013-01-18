@@ -18,7 +18,7 @@ Usage
 	}
 
 	node 'mysqlserver' {
-	  phpmyadmin::servernode { "${::ipaddress}":
+	  @@phpmyadmin::servernode { "${::ipaddress}":
 	      server_group => 'default',
 	  }
 	}
@@ -32,7 +32,7 @@ If you do re-use the code, please give me credit for it though.
 Contact
 -------
 
-Justice London<jlondon@syrussystems.com>
+Justice London <jlondon@syrussystems.com>
 
 Support
 -------

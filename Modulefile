@@ -1,4 +1,4 @@
-name    'justicel-phpmyadmin'
+name    'jlondon-phpmyadmin'
 version '0.0.1'
 source 'UNKNOWN'
 author 'Justice London'
