@@ -1,11 +1,9 @@
 name    'justicel-phpmyadmin'
 version '0.0.1'
 source 'UNKNOWN'
-author 'justicel'
+author 'Justice London'
 license 'Apache License, Version 2.0'
-summary 'UNKNOWN'
-description 'UNKNOWN'
-project_page 'UNKNOWN'
-
-## Add dependencies, if any:
-# dependency 'username/name', '>= 1.2.0'
+summary 'Puppet phpMyAdmin module'
+description 'A puppet module which allows you to install and manage phpMyAdmin'
+project_page 'http://github.com/justicel/puppet-phpmyadmin'
+dependency 'puppetlabs/apache', '>= 0.4.0'

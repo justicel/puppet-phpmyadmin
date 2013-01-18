@@ -1,16 +1,21 @@
 phpmyadmin
 
-This is the phpmyadmin module.
+This is the puppet phpMyAdmin module which allows you to install and manage phpMyAdmin.
+Additionally you can use resources to specify a group of servers to add to a phpMyAdmin server.
+
 
 License
 -------
 
+You are free to fork, modify, burn, break, twist or twine this module.
+If you do re-use the code, please give me credit for it though.
 
 Contact
 -------
 
+Justice London<jlondon@syrussystems.com>
 
 Support
 -------
 
-Please log tickets and issues at our [Projects site](http://projects.example.com)
+Please log tickets and issues at our [Projects site](http://github.com/justicel/puppet-phpmyadmin)
