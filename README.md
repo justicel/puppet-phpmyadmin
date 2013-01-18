@@ -1,4 +1,5 @@
-#puppet-phpmyadmin
+puppet-phpmyadmin
+=================
 
 This is the puppet phpMyAdmin module which allows you to install and manage phpMyAdmin.
 Additionally you can use resources to specify a group of servers to add to a phpMyAdmin server.
@@ -11,12 +12,12 @@ Instead you can add a server similar to below:
 
 Usage
 -----
-	node { 'phpmyadminserver':
+	node 'phpmyadminserver' {
 	  class { 'phpmyadmin': }
 	  phpmyadmin::server{ 'default': }
 	}
 
-	node { 'mysqlserver':
+	node 'mysqlserver' {
 	  phpmyadmin::servernode { "${::ipaddress}":
 	      server_group => 'default',
 	  }
