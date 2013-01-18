@@ -9,8 +9,8 @@ this module allow you to use stored resources to automatically generate a list o
 With this you don't need to worry about manually adding server entries to phpmyadmin or similar.
 Instead you can add a server similar to below:
 
-== Usage
-
+Usage
+-----
 	node { 'phpmyadminserver':
 	  class { 'phpmyadmin': }
 	  phpmyadmin::server{ 'default': }
@@ -22,18 +22,18 @@ Instead you can add a server similar to below:
 	  }
 	}
 
-== License
+License
 -------
 
 You are free to fork, modify, burn, break, twist or twine this module.
 If you do re-use the code, please give me credit for it though.
 
-#Contact
+Contact
 -------
 
 Justice London<jlondon@syrussystems.com>
 
-#Support
+Support
 -------
 
 Please log tickets and issues at our [Projects site](http://github.com/justicel/puppet-phpmyadmin)
