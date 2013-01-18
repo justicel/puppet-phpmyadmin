@@ -2,19 +2,25 @@
 #
 # Allows you to generate a vhost configuration for using phpmyadmin within a specific apache virtualhost.
 # By default the phpmyadmin install will be available within the localhost definitions on apache.
+# The class requires the use of puppetlabs-apache module
 #
 # === Parameters
-# [*enabled*]
-#   Default to true. This sets the package as installed or uninstalled and affects the config as well.
-# [*ip_access_ranges*]
-#   True to what it sounds like, this sets the ip ranges which are allowed to access phpmyadmin.
-#   These IP ranges can be either a single range or an array.
+# [*vhost_enabled*]
+#   Default to true. Will allow you to install or uninstall the vhost entry
+# [*priority*]
+#   Defaults to 20, which is a reasonable default. This sets in which order the vhost is loaded.
+# [*docroot*]
+#   The default should be fine. This sets where the 'DocumentRoot' for the vhost is. This
+#   defaults to the phpmyadmin shared resources path, which is then governed by config include.
+# [*aliases*]
+#   Allows you to set an alias for the phpmyadmin vhost, or to have an array of alias entries
+# [*vhost_name*]
+#   You can set a name for the vhost entry. This defaults to phpdb.$::domain
 #
 # === Examples
 #
-#  class { phpmyadmin:
-#    enabled          => 'true',
-#    ip_access_ranges => [ '192.168.1.0', '10.30.1.1' ],
+#  class { 'phpmyadmin::vhost'
+#    vhost_name => 'phpmyadmin.domain.com',
 #  }
 #
 # === Authors
@@ -26,3 +32,27 @@
 # Copyright 2013 Justice London, unless otherwise noted.
 #
 
+class phpmyadmin::vhost (
+  vhost_enabled => 'true',
+  priority      => '20',
+  docroot       => $phpmyadmin::params::doc_path,
+  aliases       => '',
+  vhost_name    => "phpdb.${::domain}",
+)
+inherits phpmyadmin::params
+{
+  
+  #Creates a basic vhost entry for apache
+    apache::vhost { "${vhost_name}":
+      docroot       => "${docroot}",
+      priority      => "${priority}",
+      serveraliases => "${aliases}",
+      ensure        => $vhost_enabled ? {
+        'true'  => 'present',
+        default => 'absent',
+      },
+      template      => 'modules/phpmyadmin/apache/vhost_template.erb',
+    }
+
+} 
+ 

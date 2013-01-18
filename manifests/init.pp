@@ -26,7 +26,7 @@
 # Copyright 2013 Justice London, unless otherwise noted.
 #
 class phpmyadmin (
-  $enabled = 'true',
+  $enabled          = 'true',
   $ip_access_ranges = $::network_eth0,
 )
 inherits phpmyadmin::params
@@ -43,7 +43,7 @@ inherits phpmyadmin::params
   #Default/basic apache config file for phpMyAdmin  
   file { "${apache_default_config}":
     content => template('phpmyadmin/phpMyAdmin.conf.erb'),
-    ensure => $enabled ? {
+    ensure  => $enabled ? {
       'true'  => 'present',
       default => 'absent',
     },

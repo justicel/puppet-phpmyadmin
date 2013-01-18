@@ -6,9 +6,10 @@ class phpmyadmin::params
   
   case $operatingsystem {
     'RedHat', 'CentOS': {
-      $package_name = 'phpMyAdmin' 
+      $package_name          = 'phpMyAdmin' 
       $apache_default_config = '/etc/httpd/conf.d/phpMyAdmin.conf'
-      $config_file = '/etc/phpMyAdmin/config.inc.php'
+      $config_file           = '/etc/phpMyAdmin/config.inc.php'
+      $doc_path              = '/usr/share/phpMyAdmin'
     }
     /^(Debian|Ubuntu)$/: {
       $package_name = 'phpmyadmin'
