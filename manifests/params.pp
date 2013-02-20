@@ -13,7 +13,7 @@ class phpmyadmin::params
       $data_dir              = '/var/lib/phpMyAdmin'
     }
     /^(Debian|Ubuntu)$/: {
-      $package_name = 'phpmyadmin'
+      $package_name          = 'phpmyadmin'
       $apache_default_config = '/etc/phpmyadmin/apache.conf'
       $config_file           = '/etc/phpmyadmin/config.inc.php'
       $doc_path              = '/usr/share/phpmyadmin'
