@@ -13,6 +13,9 @@ class phpmyadmin::params
     }
     /^(Debian|Ubuntu)$/: {
       $package_name = 'phpmyadmin'
+      $apache_default_config = '/etc/phpmyadmin/apache.conf'
+      $config_file           = '/etc/phpmyadmin/config.inc.php'
+      $doc_path              = '/usr/share/phpMyAdmin'
     }
   }
 
