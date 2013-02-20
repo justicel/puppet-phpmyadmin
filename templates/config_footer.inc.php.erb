@@ -17,8 +17,8 @@
 /*
  * Directories for saving/loading files from server
  */
-$cfg['UploadDir'] = '/var/lib/phpMyAdmin/upload';
-$cfg['SaveDir'] = '/var/lib/phpMyAdmin/save';
+$cfg['UploadDir'] = '<%= scope.lookupvar('phpmyadmin::params::data_dir') %>/upload';
+$cfg['SaveDir'] = '<%= scope.lookupvar('phpmyadmin::params::data_dir') %>/save';
 
 /**
  * Defines whether a user should be displayed a "show all (records)"
