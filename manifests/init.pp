@@ -8,13 +8,14 @@
 #   Default to true. This sets the package as installed or uninstalled and affects the config as well.
 # [*ip_access_ranges*]
 #   True to what it sounds like, this sets the ip ranges which are allowed to access phpmyadmin.
-#   These IP ranges can be either a single range or an array.
+#   These IP ranges can be either a single range or an array. Should be in dotted quad or ipv6
+#   notation (ex: 192.168.1.0/24, 192.168.1.10, 2012:db8:1234:ffff:ffff:ffff:ffff:ffff, etc.)
 #
 # === Examples
 #
 #  class { phpmyadmin:
 #    enabled          => 'true',
-#    ip_access_ranges => [ '192.168.1.0', '10.30.1.1' ],
+#    ip_access_ranges => [ '192.168.1.0/24', '10.30.1.1' ],
 #  }
 #
 # === Authors
@@ -27,7 +28,7 @@
 #
 class phpmyadmin (
   $enabled          = 'true',
-  $ip_access_ranges = $::network_eth0,
+  $ip_access_ranges = "${::network_eth0}/${::netmask_eth0}",
 )
 inherits phpmyadmin::params
 {
