@@ -16,7 +16,13 @@
 #   Allows you to set an alias for the phpmyadmin vhost, or to have an array of alias entries
 # [*vhost_name*]
 #   You can set a name for the vhost entry. This defaults to phpdb.$::domain
+# [*ssl*]
+#   Enable SSL support for the vhost. If enabled we disable phpmyadmin on port 80.
 #
+# [*ssl_cert*]
+#   Define a file on the puppet server to be ssl cert.
+# [*ssl_key*]
+#   Define a file on the puppet server to be ssl key.
 # === Examples
 #
 #  class { 'phpmyadmin::vhost'
@@ -38,6 +44,9 @@ class phpmyadmin::vhost (
   docroot       => $phpmyadmin::params::doc_path,
   aliases       => '',
   vhost_name    => "phpdb.${::domain}",
+  ssl           => 'false',
+  ssl_cert      => '',
+  ssl_key       => '',
 )
 inherits phpmyadmin::params
 {
@@ -51,8 +60,36 @@ inherits phpmyadmin::params
         'true'  => 'present',
         default => 'absent',
       },
-      template      => 'modules/phpmyadmin/apache/vhost_template.erb',
+      ssl           => $ssl
+      port          => $ssl ? { #Might need to add ability to define port. Consider...
+        'true'  => '443',
+        default => '80',
+      },
+      template      => $ssl ? {
+        'true'  => 'modules/phpmyadmin/apache/vhost_ssl_template.erb',
+        default => 'modules/phpmyadmin/apache/vhost_template.erb',
+      },
     }
 
+    #Generate ssl key/cert with provided file-locations
+    if $ssl == 'true' {
+      file { "${apache_config_dir}/phpmyadmin.crt":
+        ensure => $vhost_enabled ? {
+          'true'  => 'present',
+          default => 'absent',
+        },
+        mode   => '0644',
+        source => $ssl_cert,
+      }
+      file { "${apache_config_dir}/phpmyadmin.key":
+        ensure => $vhost_enabled ? {
+          'true'  => 'present',
+          default => 'absent',
+        },
+        mode   => '0644',
+        source => $ssl_key,
+      }
+    }
+                   
 } 
  
