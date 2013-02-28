@@ -39,14 +39,14 @@
 #
 
 class phpmyadmin::vhost (
-  vhost_enabled => 'true',
-  priority      => '20',
-  docroot       => $phpmyadmin::params::doc_path,
-  aliases       => '',
-  vhost_name    => "phpdb.${::domain}",
-  ssl           => 'false',
-  ssl_cert      => '',
-  ssl_key       => '',
+  vhost_enabled = 'true',
+  priority      = '20',
+  docroot       = $phpmyadmin::params::doc_path,
+  aliases       = '',
+  vhost_name    = "phpdb.${::domain}",
+  ssl           = 'false',
+  ssl_cert      = '',
+  ssl_key       = '',
 )
 inherits phpmyadmin::params
 {
@@ -60,7 +60,7 @@ inherits phpmyadmin::params
         'true'  => 'present',
         default => 'absent',
       },
-      ssl           => $ssl
+      ssl           => $ssl,
       port          => $ssl ? { #Might need to add ability to define port. Consider...
         'true'  => '443',
         default => '80',
