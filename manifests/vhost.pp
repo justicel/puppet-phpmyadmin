@@ -60,7 +60,7 @@ inherits phpmyadmin::params
         'true'  => 'present',
         default => 'absent',
       },
-      ssl           => $ssl
+      ssl           => $ssl,
       port          => $ssl ? { #Might need to add ability to define port. Consider...
         'true'  => '443',
         default => '80',
