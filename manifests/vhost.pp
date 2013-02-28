@@ -39,14 +39,14 @@
 #
 
 class phpmyadmin::vhost (
-  vhost_enabled => 'true',
-  priority      => '20',
-  docroot       => $phpmyadmin::params::doc_path,
-  aliases       => '',
-  vhost_name    => "phpdb.${::domain}",
-  ssl           => 'false',
-  ssl_cert      => '',
-  ssl_key       => '',
+  vhost_enabled = 'true',
+  priority      = '20',
+  docroot       = $phpmyadmin::params::doc_path,
+  aliases       = '',
+  vhost_name    = "phpdb.${::domain}",
+  ssl           = 'false',
+  ssl_cert      = '',
+  ssl_key       = '',
 )
 inherits phpmyadmin::params
 {
