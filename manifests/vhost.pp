@@ -66,8 +66,8 @@ inherits phpmyadmin::params
         default => '80',
       },
       template      => $ssl ? {
-        'true'  => 'modules/phpmyadmin/apache/vhost_ssl_template.erb',
-        default => 'modules/phpmyadmin/apache/vhost_template.erb',
+        'true'  => "${settings::confdir}/modules/phpmyadmin/templates/apache/vhost_ssl_template.erb",
+        default => "${settings::confdir}/modules/phpmyadmin/templates/apache/vhost_template.erb",
       },
     }
 
