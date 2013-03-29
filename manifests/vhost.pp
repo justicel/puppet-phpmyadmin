@@ -23,6 +23,8 @@
 #   Define a file on the puppet server to be ssl cert.
 # [*ssl_key*]
 #   Define a file on the puppet server to be ssl key.
+# [*access_log*]
+#   Enable/disable access logging for vhost
 # === Examples
 #
 #  class { 'phpmyadmin::vhost'
@@ -44,6 +46,7 @@ class phpmyadmin::vhost (
   docroot       = $phpmyadmin::params::doc_path,
   aliases       = '',
   vhost_name    = "phpdb.${::domain}",
+  access_log    = 'true',
   ssl           = 'false',
   ssl_cert      = '',
   ssl_key       = '',
@@ -56,6 +59,7 @@ inherits phpmyadmin::params
       docroot       => "${docroot}",
       priority      => "${priority}",
       serveraliases => "${aliases}",
+      access_log    => "${access_log}",
       ensure        => $vhost_enabled ? {
         'true'  => 'present',
         default => 'absent',
