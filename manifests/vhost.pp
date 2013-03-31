@@ -37,59 +37,58 @@
 #
 # Copyright 2013 Justice London, unless otherwise noted.
 #
+define phpmyadmin::vhost(
+  $vhost_enabled = 'true',
+  $priority      = '20',
+  $docroot       = $phpmyadmin::params::doc_path,
+  $aliases       = '',
+  $vhost_name    = $name,
+  $ssl           = 'false',
+  $ssl_cert      = '',
+  $ssl_key       = '',
+) {
+  include apache
 
-class phpmyadmin::vhost (
-  vhost_enabled = 'true',
-  priority      = '20',
-  docroot       = $phpmyadmin::params::doc_path,
-  aliases       = '',
-  vhost_name    = "phpdb.${::domain}",
-  ssl           = 'false',
-  ssl_cert      = '',
-  ssl_key       = '',
-)
-inherits phpmyadmin::params
-{
-  
+  $virtul_host = $vhost_name
+
   #Creates a basic vhost entry for apache
-    apache::vhost { "${vhost_name}":
-      docroot       => "${docroot}",
-      priority      => "${priority}",
-      serveraliases => "${aliases}",
-      ensure        => $vhost_enabled ? {
+  apache::vhost { $vhost_name:
+    ensure        => $vhost_enabled ? {
+      'true'  => 'present',
+      default => 'absent',
+    },
+    docroot       => $docroot,
+    priority      => $priority,
+    serveraliases => $aliases,
+    ssl           => $ssl,
+    port          => $ssl ? { #Might need to add ability to define port. Consider...
+      'true'  => '443',
+      default => '80',
+    },
+    template      => $ssl ? {
+      'true'  => 'phpmyadmin/apache/vhost_ssl_template.erb',
+      default => 'phpmyadmin/apache/vhost_template.erb',
+    },
+  }
+
+  #Generate ssl key/cert with provided file-locations
+  if $ssl == 'true' {
+    file { "${phpmyadmin::params::apache_config_dir}/phpmyadmin_${vhost_name}.crt":
+      ensure => $vhost_enabled ? {
         'true'  => 'present',
         default => 'absent',
       },
-      ssl           => $ssl,
-      port          => $ssl ? { #Might need to add ability to define port. Consider...
-        'true'  => '443',
-        default => '80',
-      },
-      template      => $ssl ? {
-        'true'  => 'modules/phpmyadmin/apache/vhost_ssl_template.erb',
-        default => 'modules/phpmyadmin/apache/vhost_template.erb',
-      },
+      mode   => '0644',
+      source => $ssl_cert,
     }
+    file { "${phpmyadmin::params::apache_config_dir}/phpmyadmin_${vhost_name}.key":
+      ensure => $vhost_enabled ? {
+        'true'  => 'present',
+        default => 'absent',
+      },
+      mode   => '0644',
+      source => $ssl_key,
+    }
+  }
 
-    #Generate ssl key/cert with provided file-locations
-    if $ssl == 'true' {
-      file { "${apache_config_dir}/phpmyadmin.crt":
-        ensure => $vhost_enabled ? {
-          'true'  => 'present',
-          default => 'absent',
-        },
-        mode   => '0644',
-        source => $ssl_cert,
-      }
-      file { "${apache_config_dir}/phpmyadmin.key":
-        ensure => $vhost_enabled ? {
-          'true'  => 'present',
-          default => 'absent',
-        },
-        mode   => '0644',
-        source => $ssl_key,
-      }
-    }
-                   
-} 
- 
+}
