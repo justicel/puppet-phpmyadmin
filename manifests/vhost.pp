@@ -51,41 +51,49 @@ define phpmyadmin::vhost(
 
   $virtul_host = $vhost_name
 
+  case $ssl {
+    'true': {
+        $port = '443'
+        $template = 'phpmyadmin/apache/vhost_ssl_template.erb'
+      }
+      default: {
+        $port = '80'
+        $template = 'phpmyadmin/apache/vhost_template.erb'
+      }
+  }
+
+  $ensure = $vhost_enabled ? {
+    'true'  => 'present',
+    default => 'absent',
+  }
+
+  $conf_dir = $phpmyadmin::params::apache_config_dir
+  if ! defined(File["${conf_dir}/sites-enabled/1.conf"]) {
+    file { "${conf_dir}/sites-enabled/1.conf":
+      content => "NameVirtualHost *:${port}"
+    }
+  }
+
   #Creates a basic vhost entry for apache
   apache::vhost { $vhost_name:
-    ensure        => $vhost_enabled ? {
-      'true'  => 'present',
-      default => 'absent',
-    },
+    ensure        => $ensure,
     docroot       => $docroot,
     priority      => $priority,
     serveraliases => $aliases,
     ssl           => $ssl,
-    port          => $ssl ? { #Might need to add ability to define port. Consider...
-      'true'  => '443',
-      default => '80',
-    },
-    template      => $ssl ? {
-      'true'  => 'phpmyadmin/apache/vhost_ssl_template.erb',
-      default => 'phpmyadmin/apache/vhost_template.erb',
-    },
+    port          => $port,
+    template      => $template,
   }
 
   #Generate ssl key/cert with provided file-locations
   if $ssl == 'true' {
-    file { "${phpmyadmin::params::apache_config_dir}/phpmyadmin_${vhost_name}.crt":
-      ensure => $vhost_enabled ? {
-        'true'  => 'present',
-        default => 'absent',
-      },
+    file { "${conf_dir}/phpmyadmin_${vhost_name}.crt":
+      ensure => $ensure,
       mode   => '0644',
       source => $ssl_cert,
     }
-    file { "${phpmyadmin::params::apache_config_dir}/phpmyadmin_${vhost_name}.key":
-      ensure => $vhost_enabled ? {
-        'true'  => 'present',
-        default => 'absent',
-      },
+    file { "${conf_dir}/phpmyadmin_${vhost_name}.key":
+      ensure => $ensure,
       mode   => '0644',
       source => $ssl_key,
     }

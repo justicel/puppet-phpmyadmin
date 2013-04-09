@@ -11,6 +11,8 @@
 # [*ip_access_ranges*]
 #   True to what it sounds like, this sets the ip ranges which are allowed to access phpmyadmin.
 #   These IP ranges can be either a single range or an array.
+# [*properties_iconic*]
+#   Use icons instead of text for the table display of a database (TRUE|FALSE|'both') 
 #
 # === Examples
 #
@@ -30,6 +32,7 @@
 define phpmyadmin::server (
   $blowfish_key     = md5("${::fqdn}${::ipaddress}"),
   $resource_collect = true,
+  $properties_iconic = 'FALSE',
 )
 {
   include phpmyadmin::params
