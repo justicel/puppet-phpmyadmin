@@ -8,6 +8,7 @@ class phpmyadmin::params
     'RedHat', 'CentOS': {
       $package_name          = 'phpMyAdmin' 
       $apache_config_dir     = '/etc/httpd/conf'
+      $site_enable_dir       = '/etc/httpd/conf.d/'
       $apache_default_config = '/etc/httpd/conf.d/phpMyAdmin.conf'
       $config_file           = '/etc/phpMyAdmin/config.inc.php'
       $doc_path              = '/usr/share/phpMyAdmin'
@@ -17,6 +18,7 @@ class phpmyadmin::params
     /^(Debian|Ubuntu)$/: {
       $package_name          = 'phpmyadmin'
       $apache_config_dir     = '/etc/apache2'
+      $site_enable_dir       = "${apache_config_dir}/sites-enabled"
       $apache_default_config = '/etc/phpmyadmin/apache.conf'
       $config_file           = '/etc/phpmyadmin/config.inc.php'
       $doc_path              = '/usr/share/phpmyadmin'

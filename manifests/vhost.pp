@@ -68,8 +68,10 @@ define phpmyadmin::vhost(
   }
 
   $conf_dir = $phpmyadmin::params::apache_config_dir
-  if ! defined(File["${conf_dir}/sites-enabled/1.conf"]) {
-    file { "${conf_dir}/sites-enabled/1.conf":
+  $conf_dir_enable = $phpmyadmin::params::site_enable_dir
+
+  if ! defined(File["${conf_dir_enable}/1.conf"]) {
+    file { "${conf_dir_enable}/1.conf":
       content => "NameVirtualHost *:${port}"
     }
   }
