@@ -1,5 +1,5 @@
 name    'jlondon-phpmyadmin'
-version '0.0.2'
+version '0.0.3'
 source 'UNKNOWN'
 author 'Justice London'
 license 'Apache License, Version 2.0'

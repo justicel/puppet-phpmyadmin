@@ -23,8 +23,6 @@
 #   Define a file on the puppet server to be ssl cert.
 # [*ssl_key*]
 #   Define a file on the puppet server to be ssl key.
-# [*access_log*]
-#   Enable/disable access logging for vhost
 # === Examples
 #
 #  class { 'phpmyadmin::vhost'
@@ -39,61 +37,68 @@
 #
 # Copyright 2013 Justice London, unless otherwise noted.
 #
+define phpmyadmin::vhost(
+  $vhost_enabled = 'true',
+  $priority      = '20',
+  $docroot       = $phpmyadmin::params::doc_path,
+  $aliases       = '',
+  $vhost_name    = $name,
+  $ssl           = 'false',
+  $ssl_cert      = '',
+  $ssl_key       = '',
+) {
+  include apache
 
-class phpmyadmin::vhost (
-  vhost_enabled = 'true',
-  priority      = '20',
-  docroot       = $phpmyadmin::params::doc_path,
-  aliases       = '',
-  vhost_name    = "phpdb.${::domain}",
-  access_log    = 'true',
-  ssl           = 'false',
-  ssl_cert      = '',
-  ssl_key       = '',
-)
-inherits phpmyadmin::params
-{
-  
+  $virtul_host = $vhost_name
+
+  case $ssl {
+    'true': {
+        $port = '443'
+        $template = 'phpmyadmin/apache/vhost_ssl_template.erb'
+      }
+      default: {
+        $port = '80'
+        $template = 'phpmyadmin/apache/vhost_template.erb'
+      }
+  }
+
+  $ensure = $vhost_enabled ? {
+    'true'  => 'present',
+    default => 'absent',
+  }
+
+  $conf_dir = $phpmyadmin::params::apache_config_dir
+  $conf_dir_enable = $phpmyadmin::params::site_enable_dir
+
+  if ! defined(File["${conf_dir_enable}/1.conf"]) {
+    file { "${conf_dir_enable}/1.conf":
+      content => "NameVirtualHost *:${port}"
+    }
+  }
+
   #Creates a basic vhost entry for apache
-    apache::vhost { "${vhost_name}":
-      docroot       => "${docroot}",
-      priority      => "${priority}",
-      serveraliases => "${aliases}",
-      access_log    => "${access_log}",
-      ensure        => $vhost_enabled ? {
-        'true'  => 'present',
-        default => 'absent',
-      },
-      ssl           => $ssl,
-      port          => $ssl ? { #Might need to add ability to define port. Consider...
-        'true'  => '443',
-        default => '80',
-      },
-      template      => $ssl ? {
-        'true'  => "${settings::confdir}/modules/phpmyadmin/templates/apache/vhost_ssl_template.erb",
-        default => "${settings::confdir}/modules/phpmyadmin/templates/apache/vhost_template.erb",
-      },
-    }
+  apache::vhost { $vhost_name:
+    ensure        => $ensure,
+    docroot       => $docroot,
+    priority      => $priority,
+    serveraliases => $aliases,
+    ssl           => $ssl,
+    port          => $port,
+    template      => $template,
+  }
 
-    #Generate ssl key/cert with provided file-locations
-    if $ssl == 'true' {
-      file { "${apache_config_dir}/phpmyadmin.crt":
-        ensure => $vhost_enabled ? {
-          'true'  => 'present',
-          default => 'absent',
-        },
-        mode   => '0644',
-        source => $ssl_cert,
-      }
-      file { "${apache_config_dir}/phpmyadmin.key":
-        ensure => $vhost_enabled ? {
-          'true'  => 'present',
-          default => 'absent',
-        },
-        mode   => '0644',
-        source => $ssl_key,
-      }
+  #Generate ssl key/cert with provided file-locations
+  if $ssl == 'true' {
+    file { "${conf_dir}/phpmyadmin_${vhost_name}.crt":
+      ensure => $ensure,
+      mode   => '0644',
+      source => $ssl_cert,
     }
-                   
-} 
- 
+    file { "${conf_dir}/phpmyadmin_${vhost_name}.key":
+      ensure => $ensure,
+      mode   => '0644',
+      source => $ssl_key,
+    }
+  }
+
+}

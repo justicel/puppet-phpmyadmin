@@ -1,14 +1,13 @@
 # Managed by Puppet
 
-NameVirtualHost <%= vhost_name %>:<%= port %>
 <VirtualHost <%= vhost_name %>:<%= port %>>
   ServerName <%= srvname %>
 
   #Enable SSL Support in vhost
   SSLEngine on
   SSLCipherSuite ALL:-ADH:+HIGH:+MEDIUM:-LOW:-SSLv2:-EXP
-  SSLCertificateFile <%= scope.lookupvar('phpmyadmin::params::apache_config_dir') %>/phpmyadmin.crt
-  SSLCertificateKeyFile <%= scope.lookupvar('phpmyadmin::params::apache_config_dir') %>/phpmyadmin.key
+  SSLCertificateFile <%= scope.lookupvar('phpmyadmin::params::apache_config_dir') %>/phpmyadmin_<%= @virtul_host %>.crt
+  SSLCertificateKeyFile <%= scope.lookupvar('phpmyadmin::params::apache_config_dir') %>/phpmyadmin_<%= @virtul_host %>.key
 
 <% if serveradmin %>
   ServerAdmin <%= serveradmin %>
@@ -33,6 +32,6 @@ NameVirtualHost <%= vhost_name %>:<%= port %>
   ServerSignature Off
 
   #Include the phpMyAdmin config in this vhost
-  Include "<%= apache_default_config %>"
+  Include "<%= scope.lookupvar('phpmyadmin::params::apache_default_config') %>"
 
 </VirtualHost>
