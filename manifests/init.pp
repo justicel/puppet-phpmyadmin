@@ -32,17 +32,17 @@ class phpmyadmin (
 )
 inherits phpmyadmin::params
 {
-  if $preseed_package {
+  if $phpmyadmin::params::preseed_package {
     debconf::set_selection{ 'reconfigure-webserver':
       selection   => 'phpmyadmin/reconfigure-webserver',
       value_type  => 'multiselect',
       value       => 'apache2',
-      before      => Package[$package_name],
+      before      => Package[$phpmyadmin::params::package_name],
     }
   }
 
   #Install or remove package based on enable status
-  package { $package_name:
+  package { $phpmyadmin::params::package_name:
     ensure => $enabled ? {
       'true'  => 'present',
       default => 'absent',
@@ -50,13 +50,13 @@ inherits phpmyadmin::params
   }
 
   #Default/basic apache config file for phpMyAdmin
-  file { $apache_default_config:
-    content => template('phpmyadmin/phpMyAdmin.conf.erb'),
+  file { $phpmyadmin::params::apache_default_config:
     ensure  => $enabled ? {
       'true'  => 'present',
       default => 'absent',
     },
-    require => Package[$package_name],
+    content => template('phpmyadmin/phpMyAdmin.conf.erb'),
+    require => Package[$phpmyadmin::params::package_name],
   }
 
 }

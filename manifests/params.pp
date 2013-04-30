@@ -1,12 +1,12 @@
 #Phpmyadmin installation parameters
 #Sets variables for both centos/redhat and ubuntu OS versions currently
 
-class phpmyadmin::params 
+class phpmyadmin::params
 {
-  
-  case $operatingsystem {
+
+  case $::operatingsystem {
     'RedHat', 'CentOS': {
-      $package_name          = 'phpMyAdmin' 
+      $package_name          = 'phpMyAdmin'
       $apache_config_dir     = '/etc/httpd/conf'
       $site_enable_dir       = '/etc/httpd/conf.d/'
       $apache_default_config = '/etc/httpd/conf.d/phpMyAdmin.conf'
@@ -25,6 +25,7 @@ class phpmyadmin::params
       $data_dir              = '/var/lib/phpmyadmin'
       $preseed_package       = true
     }
+    default: { }
   }
 
 }

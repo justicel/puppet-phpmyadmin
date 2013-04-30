@@ -30,7 +30,7 @@
 #
 
 define phpmyadmin::servernode (
-  $myserver_name   = $name,
+  $myserver_name = $name,
   $server_group,
 )
 {
