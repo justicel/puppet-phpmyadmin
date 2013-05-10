@@ -17,29 +17,29 @@ Usage
 	  phpmyadmin::server{ 'default': }
 
           phpmyadmin::vhost { 'internal.domain.net':
-            vhost_enabled => 'true',
+            vhost_enabled => true,
             priority      => '20',
             docroot       => $phpmyadmin::params::doc_path,
-            ssl           => 'true',
+            ssl           => true,
             ssl_cert      => 'puppet:///modules/phpmyadmin/sslkey/internal.domain.net.crt',
             ssl_key       => 'puppet:///modules/phpmyadmin/sslkey/internal.domain.net.private.key',
           }
 
           phpmyadmin::vhost { 'external.domain.org':
-            vhost_enabled => 'true',
+            vhost_enabled => true,
             priority      => '30',
             docroot       => $phpmyadmin::params::doc_path,
-            ssl           => 'true',
+            ssl           => true,
             ssl_cert      => 'puppet:///modules/phpmyadmin/sslkey/external.domain.org.crt',
             ssl_key       => 'puppet:///modules/phpmyadmin/sslkey/external.domain.org.private.key',
           }
-	}
+        }
 
-	node 'mysqlserver' {
-	  @@phpmyadmin::servernode { "${::ipaddress}":
-	      server_group => 'default',
-	  }
-	}
+        node 'mysqlserver' {
+          @@phpmyadmin::servernode { "${::ipaddress}":
+            server_group => 'default',
+          }
+        }
 
 
 License
