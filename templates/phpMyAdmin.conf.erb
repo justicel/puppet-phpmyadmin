@@ -19,7 +19,7 @@ Alias /phpmyadmin <%= @doc_path %>
      # Apache 2.2
      Order Deny,Allow
      Deny from All
-<% ip_access_ranges.each do |range| -%>
+<% @ip_access_ranges.each do |range| -%>
      Allow from <%= range %>
 <% end -%>
      Allow from ::1
@@ -35,7 +35,7 @@ Alias /phpmyadmin <%= @doc_path %>
      # Apache 2.2
      Order Deny,Allow
      Deny from All
-<% ip_access_ranges.each do |range| -%>
+<% @ip_access_ranges.each do |range| -%>
      Allow from <%= range %>
 <% end -%>
      Allow from ::1
