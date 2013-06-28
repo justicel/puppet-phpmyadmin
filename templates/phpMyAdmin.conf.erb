@@ -7,10 +7,10 @@
 # But allowing phpMyAdmin to anyone other than localhost should be considered
 # dangerous unless properly secured by SSL
 
-Alias /phpMyAdmin <%= doc_path %>
-Alias /phpmyadmin <%= doc_path %>
+Alias /phpMyAdmin <%= @doc_path %>
+Alias /phpmyadmin <%= @doc_path %>
 
-<Directory <%= doc_path %>/>
+<Directory <%= @doc_path %>/>
    <IfModule mod_authz_core.c>
      # Apache 2.4
      Require local
@@ -19,14 +19,14 @@ Alias /phpmyadmin <%= doc_path %>
      # Apache 2.2
      Order Deny,Allow
      Deny from All
-<% ip_access_ranges.each do |range| -%>
+<% @ip_access_ranges.each do |range| -%>
      Allow from <%= range %>
 <% end -%>
      Allow from ::1
    </IfModule>
 </Directory>
 
-<Directory <%= doc_path %>/setup/>
+<Directory <%= @doc_path %>/setup/>
    <IfModule mod_authz_core.c>
      # Apache 2.4
      Require local
@@ -35,7 +35,7 @@ Alias /phpmyadmin <%= doc_path %>
      # Apache 2.2
      Order Deny,Allow
      Deny from All
-<% ip_access_ranges.each do |range| -%>
+<% @ip_access_ranges.each do |range| -%>
      Allow from <%= range %>
 <% end -%>
      Allow from ::1
@@ -45,19 +45,19 @@ Alias /phpmyadmin <%= doc_path %>
 # These directories do not require access over HTTP - taken from the original
 # phpMyAdmin upstream tarball
 #
-<Directory <%= doc_path %>/libraries/>
+<Directory <%= @doc_path %>/libraries/>
     Order Deny,Allow
     Deny from All
     Allow from None
 </Directory>
 
-<Directory <%= doc_path %>/setup/lib/>
+<Directory <%= @doc_path %>/setup/lib/>
     Order Deny,Allow
     Deny from All
     Allow from None
 </Directory>
 
-<Directory <%= doc_path %>/setup/frames/>
+<Directory <%= @doc_path %>/setup/frames/>
     Order Deny,Allow
     Deny from All
     Allow from None
@@ -67,7 +67,7 @@ Alias /phpmyadmin <%= doc_path %>
 # filtering SQL etc.  This may break your mod_security implementation.
 #
 #<IfModule mod_security.c>
-#    <Directory <%= doc_path %>/>
+#    <Directory <%= @doc_path %>/>
 #        SecRuleInheritance Off
 #    </Directory>
 #</IfModule>
