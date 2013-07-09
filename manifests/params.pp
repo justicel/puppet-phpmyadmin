@@ -13,6 +13,7 @@ class phpmyadmin::params
       $config_file           = '/etc/phpMyAdmin/config.inc.php'
       $doc_path              = '/usr/share/phpMyAdmin'
       $data_dir              = '/var/lib/phpMyAdmin'
+      $apache_name           = 'httpd'
       $preseed_package       = false
     }
     /^(Debian|Ubuntu)$/: {
@@ -23,6 +24,7 @@ class phpmyadmin::params
       $config_file           = '/etc/phpmyadmin/config.inc.php'
       $doc_path              = '/usr/share/phpmyadmin'
       $data_dir              = '/var/lib/phpmyadmin'
+      $apache_name           = 'apache2'
       $preseed_package       = true
     }
     default: { }
