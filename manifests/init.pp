@@ -57,6 +57,7 @@ inherits phpmyadmin::params
     },
     content => template('phpmyadmin/phpMyAdmin.conf.erb'),
     require => Package[$phpmyadmin::params::package_name],
+    notify  => Service[$phpmyadmin::params::apache_name],
   }
 
 }
