@@ -28,7 +28,7 @@
 #
 class phpmyadmin (
   $enabled          = 'true',
-  $ip_access_ranges = "${::network_eth0}/${::netmask_eth0}",
+  $ip_access_ranges = ["${::network_eth0}/${::netmask_eth0}"],
 )
 inherits phpmyadmin::params
 {
