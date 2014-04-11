@@ -46,21 +46,36 @@ Alias /phpmyadmin <%= @doc_path %>
 # phpMyAdmin upstream tarball
 #
 <Directory <%= @doc_path %>/libraries/>
-    Order Deny,Allow
-    Deny from All
-    Allow from None
+   <IfModule mod_authz_core.c>
+        Require all denied
+   </IfModule>
+   <IfModule !mod_authz_core.c>
+        Order Deny,Allow
+        Deny from All
+        Allow from None   
+   </IfModule>
 </Directory>
 
 <Directory <%= @doc_path %>/setup/lib/>
-    Order Deny,Allow
-    Deny from All
-    Allow from None
+   <IfModule mod_authz_core.c>
+        Require all denied
+   </IfModule>
+   <IfModule !mod_authz_core.c>
+        Order Deny,Allow
+        Deny from All
+        Allow from None
+   </IfModule>
 </Directory>
 
 <Directory <%= @doc_path %>/setup/frames/>
-    Order Deny,Allow
-    Deny from All
-    Allow from None
+   <IfModule mod_authz_core.c>
+        Require all denied
+   </IfModule>
+   <IfModule !mod_authz_core.c>
+        Order Deny,Allow
+        Deny from All
+        Allow from None
+   </IfModule>
 </Directory>
 
 # This configuration prevents mod_security at phpMyAdmin directories from
