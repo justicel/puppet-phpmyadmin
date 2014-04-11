@@ -13,6 +13,9 @@ Alias /phpmyadmin <%= @doc_path %>
 <Directory <%= @doc_path %>/>
    <IfModule mod_authz_core.c>
      # Apache 2.4
+<% @ip_access_ranges.each do |range| -%>
+     Require ip <%= range %>
+<% end -%>
      Require local
    </IfModule>
    <IfModule !mod_authz_core.c>
@@ -29,6 +32,9 @@ Alias /phpmyadmin <%= @doc_path %>
 <Directory <%= @doc_path %>/setup/>
    <IfModule mod_authz_core.c>
      # Apache 2.4
+<% @ip_access_ranges.each do |range| -%>
+     Require ip <%= range %>
+<% end -%>
      Require local
    </IfModule>
    <IfModule !mod_authz_core.c>
