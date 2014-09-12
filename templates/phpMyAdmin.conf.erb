@@ -13,6 +13,9 @@ Alias /phpmyadmin <%= @doc_path %>
 <Directory <%= @doc_path %>/>
    <IfModule mod_authz_core.c>
      # Apache 2.4
+<% @ip_access_ranges.each do |range| -%>
+     Require ip <%= range %>
+<% end -%>
      Require local
    </IfModule>
    <IfModule !mod_authz_core.c>
@@ -29,6 +32,9 @@ Alias /phpmyadmin <%= @doc_path %>
 <Directory <%= @doc_path %>/setup/>
    <IfModule mod_authz_core.c>
      # Apache 2.4
+<% @ip_access_ranges.each do |range| -%>
+     Require ip <%= range %>
+<% end -%>
      Require local
    </IfModule>
    <IfModule !mod_authz_core.c>
@@ -46,21 +52,36 @@ Alias /phpmyadmin <%= @doc_path %>
 # phpMyAdmin upstream tarball
 #
 <Directory <%= @doc_path %>/libraries/>
-    Order Deny,Allow
-    Deny from All
-    Allow from None
+   <IfModule mod_authz_core.c>
+        Require all denied
+   </IfModule>
+   <IfModule !mod_authz_core.c>
+        Order Deny,Allow
+        Deny from All
+        Allow from None   
+   </IfModule>
 </Directory>
 
 <Directory <%= @doc_path %>/setup/lib/>
-    Order Deny,Allow
-    Deny from All
-    Allow from None
+   <IfModule mod_authz_core.c>
+        Require all denied
+   </IfModule>
+   <IfModule !mod_authz_core.c>
+        Order Deny,Allow
+        Deny from All
+        Allow from None
+   </IfModule>
 </Directory>
 
 <Directory <%= @doc_path %>/setup/frames/>
-    Order Deny,Allow
-    Deny from All
-    Allow from None
+   <IfModule mod_authz_core.c>
+        Require all denied
+   </IfModule>
+   <IfModule !mod_authz_core.c>
+        Order Deny,Allow
+        Deny from All
+        Allow from None
+   </IfModule>
 </Directory>
 
 # This configuration prevents mod_security at phpMyAdmin directories from
