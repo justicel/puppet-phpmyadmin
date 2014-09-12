@@ -32,8 +32,7 @@
 define phpmyadmin::servernode (
   $myserver_name = $name,
   $server_group,
-)
-{
+) {
   include phpmyadmin::params
 
   #Generate a server entry for the realized server ON the phpmyadmin server

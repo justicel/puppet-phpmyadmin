@@ -37,7 +37,7 @@
 #
 # Copyright 2013 Justice London, unless otherwise noted.
 #
-define phpmyadmin::vhost(
+define phpmyadmin::vhost (
   $vhost_enabled = true,
   $priority      = '20',
   $docroot       = $phpmyadmin::params::doc_path,

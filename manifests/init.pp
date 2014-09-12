@@ -33,7 +33,7 @@ class phpmyadmin (
 inherits phpmyadmin::params
 {
   if $phpmyadmin::params::preseed_package {
-    debconf::set_selection{ 'reconfigure-webserver':
+    phpmyadmin::debconf::set_selection{ 'reconfigure-webserver':
       selection   => 'phpmyadmin/reconfigure-webserver',
       value_type  => 'multiselect',
       value       => 'apache2',

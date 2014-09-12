@@ -1,8 +1,7 @@
 #Phpmyadmin installation parameters
 #Sets variables for both centos/redhat and ubuntu OS versions currently
 
-class phpmyadmin::params
-{
+class phpmyadmin::params {
 
   case $::operatingsystem {
     'RedHat', 'CentOS': {
