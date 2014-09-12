@@ -32,8 +32,12 @@ class phpmyadmin (
 )
 inherits phpmyadmin::params
 {
+
+  #Just in case, include apache as part of the main run
+  include apache
+
   if $phpmyadmin::params::preseed_package {
-    phpmyadmin::debconf::set_selection{ 'reconfigure-webserver':
+    phpmyadmin::debconf{ 'reconfigure-webserver':
       selection   => 'phpmyadmin/reconfigure-webserver',
       value_type  => 'multiselect',
       value       => 'apache2',

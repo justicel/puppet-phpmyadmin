@@ -1,5 +1,5 @@
 #Simple class to validate and seed the correct package selection for debian based systems
-define phpmyadmin::debconf::set_selection ( $selection = '', $value_type = 'string', $value = '' ) {
+define phpmyadmin::debconf ( $selection = '', $value_type = 'string', $value = '' ) {
   #Install debconf package as needed
   ensure_packages(['debconf-utils'])
 
