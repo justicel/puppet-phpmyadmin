@@ -1,0 +1,16 @@
+{
+  "name": "jlondon-phpmyadmin",
+  "version": "0.2.0",
+  "author": "Justice London",
+  "summary": "Puppet phpMyAdmin module",
+  "license": "Apache License, Version 2.0",
+  "source": "http://github.com/justicel/puppet-phpmyadmin.git",
+  "project_page": "http://github.com/justicel/puppet-phpmyadmin",
+  "issues_url": "http://github.com/justicel/puppet-phpmyadmin/issues",
+  "description": "A puppet module which allows you to install and manage phpMyAdmin",
+  "dependencies": [
+    {"name":"puppetlabs/apache","version_requirement":">= 0.6.0"},
+    {"name":"puppetlabs/concat","version_requirement":">= 1.0.0"},
+    {"name":"puppetlabs/stdlib","version_requirement":">= 3.2.0"}
+  ]
+}
