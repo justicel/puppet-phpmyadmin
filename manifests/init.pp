@@ -9,13 +9,13 @@
 # [*ip_access_ranges*]
 #   True to what it sounds like, this sets the ip ranges which are allowed to access phpmyadmin.
 #   These IP ranges can be either a single range or an array. Should be in dotted quad or ipv6
-#   notation (ex: 192.168.1.0/24, 192.168.1.10, 2012:db8:1234:ffff:ffff:ffff:ffff:ffff, etc.)
+#   notation (ex: 192.168.1.0/255.255.255.0, 192.168.1.10, 2012:db8:1234:ffff:ffff:ffff:ffff:ffff, etc.)
 #
 # === Examples
 #
 #  class { phpmyadmin:
-#    enabled          => 'true',
-#    ip_access_ranges => [ '192.168.1.0/24', '10.30.1.1' ],
+#    enabled          => true,
+#    ip_access_ranges => [ '192.168.1.0/255.255.255.0', '10.30.1.1' ],
 #  }
 #
 # === Authors
@@ -27,41 +27,47 @@
 # Copyright 2013 Justice London, unless otherwise noted.
 #
 class phpmyadmin (
-  $enabled          = 'true',
+  $enabled          = true,
   $ip_access_ranges = ["${::network_eth0}/${::netmask_eth0}"],
 )
-inherits phpmyadmin::params
+inherits ::phpmyadmin::params
 {
 
-  #Just in case, include apache as part of the main run
-  include apache
+  #Hacky, but if we want to not break with an already included apache... override mpm
+  #If someone knows how to actually get out-of-scope variables to properly inherit
+  #let me know.
+  if !defined(Class['::apache']) {
+    class { '::apache':
+      mpm_module => 'prefork',
+    }
+    include ::apache::mod::php
+  }
 
-  if $phpmyadmin::params::preseed_package {
-    phpmyadmin::debconf{ 'reconfigure-webserver':
-      selection   => 'phpmyadmin/reconfigure-webserver',
-      value_type  => 'multiselect',
-      value       => 'apache2',
-      before      => Package[$phpmyadmin::params::package_name],
+  $enabledt = str2bool($enabled)
+  #Define present/absent for enabled state (true/false)
+  $state_select = $enabledt ? {
+    true    => 'present',
+    default => 'absent',
+  }
+
+  if $::phpmyadmin::params::preseed_package {
+    phpmyadmin::debconf { 'reconfigure-webserver':
+      selection  => 'phpmyadmin/reconfigure-webserver',
+      value_type => 'multiselect',
+      value      => 'apache2',
+      before     => Package[$::phpmyadmin::params::package_name],
     }
   }
 
   #Install or remove package based on enable status
-  package { $phpmyadmin::params::package_name:
-    ensure => $enabled ? {
-      'true'  => 'present',
-      default => 'absent',
-    },
-  }
+  ensure_packages([$::phpmyadmin::params::package_name], { ensure => $state_select })
 
   #Default/basic apache config file for phpMyAdmin
-  file { $phpmyadmin::params::apache_default_config:
-    ensure  => $enabled ? {
-      'true'  => 'present',
-      default => 'absent',
-    },
+  file { $::phpmyadmin::params::apache_default_config:
+    ensure  => $state_select,
     content => template('phpmyadmin/phpMyAdmin.conf.erb'),
-    require => Package[$phpmyadmin::params::package_name],
-    notify  => Service[$phpmyadmin::params::apache_name],
+    require => Package[$::phpmyadmin::params::package_name],
+    notify  => Service[$::apache::params::apache_name],
   }
 
 }

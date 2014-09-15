@@ -38,6 +38,7 @@
 # Copyright 2013 Justice London, unless otherwise noted.
 #
 define phpmyadmin::vhost (
+  $ensure        = present,
   $vhost_enabled = true,
   $priority      = '20',
   $docroot       = $phpmyadmin::params::doc_path,
@@ -47,31 +48,41 @@ define phpmyadmin::vhost (
   $ssl_cert      = '',
   $ssl_key       = '',
 ) {
-  include apache
+  include ::phpmyadmin
 
+  #Set some default variables
+  $conf_dir = $::apache::params::conf_dir
+  $conf_dir_enable = $::phpmyadmin::params::site_enable_dir
+
+  #If SSL is enabled, use 443 port by default
   case $ssl {
-      true: {
-        $port = '443'
-      }
-      default: {
-        $port = '80'
-      }
-  }
+    true: {
+      #Set vhost port
+      $port = '443'
 
-  $conf_dir = $phpmyadmin::params::apache_config_dir
-  $conf_dir_enable = $phpmyadmin::params::site_enable_dir
+      #Define SSL key files if SSL is enabled
+      file { "${conf_dir}/phpmyadmin_${vhost_name}.crt":
+        ensure => $ensure,
+        mode   => 0644,
+        source => $ssl_crt,
+      }
+      file { "${conf_dir}/phpmyadmin_${vhost_name}.key":
+        ensure => $ensure,
+        mode   => 0644,
+        source => $ssl_key,
+      }
 
-  #Generate ssl key/cert with provided file-locations
-  if $ssl == true {
-    file { "${conf_dir}/phpmyadmin_${vhost_name}.crt":
-      ensure => $ensure,
-      mode   => '0644',
-      source => $ssl_cert,
+      #Define the apache location for vhost
+      $ssl_apache_cert = "${conf_dir}/phpmyadmin_${vhost_name}.crt"
+      $ssl_apache_key  = "${conf_dir}/phpmyadmin_${vhost_name}.key"
     }
-    file { "${conf_dir}/phpmyadmin_${vhost_name}.key":
-      ensure => $ensure,
-      mode   => '0644',
-      source => $ssl_key,
+    default: {
+      #Default vhost port
+      $port = '80'
+
+      #No SSL cert/key define
+      $ssl_apache_cert = undef
+      $ssl_apache_key  = undef
     }
   }
 
@@ -83,15 +94,9 @@ define phpmyadmin::vhost (
     port            => $port,
     serveraliases   => $aliases,
     ssl             => $ssl,
-    ssl_cert        => $ssl ? {
-      true    => "${conf_dir}/phpmyadmin_${vhost_name}.crt",
-      default => undef,
-    },
-    ssl_key         => $ssl ? {
-      true    => "${conf_dir}/phpmyadmin_${vhost_name}.key",
-      default => undef,
-    },
     custom_fragment => template('phpmyadmin/apache/phpmyadmin_fragment.erb'),
+    ssl_cert        => $ssl_apache_cert,
+    ssl_key         => $ssl_apache_key,
   }
 
 }
