@@ -1,0 +1,16 @@
+2014-09-15 - Version 0.2.0
+
+Summary: Re-engaging support for this module. Please submit any bug reports or
+pull requests directly to the github project!
+
+Bugfixes: 
+- Properly support direct installation of module without needing to define
+apache or php configuration on node.
+- Lots of lint fixes and param-level cleanup
+- Re-factorization of codebase to resolve issues with missing variables and
+similar made over many conflicting pull requests. Will be more careful with
+what is accepted as a pull in the future.
+
+Summary:
+
+Lots of things fixed, but no new features
