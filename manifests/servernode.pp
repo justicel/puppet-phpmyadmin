@@ -33,7 +33,7 @@ define phpmyadmin::servernode (
   $server_group,
   $myserver_name = $name,
 ) {
-  include phpmyadmin::params
+  include ::phpmyadmin::params
 
   #Generate a server entry for the realized server ON the phpmyadmin server
   concat::fragment { "${server_group}_phpmyadmin_server_${name}":

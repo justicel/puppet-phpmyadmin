@@ -2,9 +2,10 @@
 #Sets variables for both centos/redhat and ubuntu OS versions currently
 
 class phpmyadmin::params {
+  include ::apache::params
 
-  case $::operatingsystem {
-    'RedHat', 'CentOS': {
+  case $::osfamily {
+    'RedHat': {
       $package_name          = 'phpMyAdmin'
       $site_enable_dir       = $::apache::params::confd_dir
       $apache_default_config = "${site_enable_dir}/phpMyAdmin.conf"
@@ -13,7 +14,7 @@ class phpmyadmin::params {
       $data_dir              = '/var/lib/phpMyAdmin'
       $preseed_package       = false
     }
-    /^(Debian|Ubuntu)$/: {
+    'Debian': {
       $package_name          = 'phpmyadmin'
       $site_enable_dir       = $::apache::params::vhost_enable_dir
       $apache_default_config = "${::apache::params::confd_dir}/phpmyadmin.conf"
@@ -22,7 +23,9 @@ class phpmyadmin::params {
       $data_dir              = '/var/lib/phpmyadmin'
       $preseed_package       = true
     }
-    default: { }
+    default: {
+      fail("Class['phpmyadmin::params']: Unsupported OS: ${::osfamily}")
+    }
   }
 
 }

@@ -41,7 +41,7 @@ define phpmyadmin::vhost (
   $ensure        = present,
   $vhost_enabled = true,
   $priority      = '20',
-  $docroot       = $phpmyadmin::params::doc_path,
+  $docroot       = $::phpmyadmin::params::doc_path,
   $aliases       = '',
   $vhost_name    = $name,
   $ssl           = false,
@@ -63,12 +63,12 @@ define phpmyadmin::vhost (
       #Define SSL key files if SSL is enabled
       file { "${conf_dir}/phpmyadmin_${vhost_name}.crt":
         ensure => $ensure,
-        mode   => 0644,
-        source => $ssl_crt,
+        mode   => '0644',
+        source => $ssl_cert,
       }
       file { "${conf_dir}/phpmyadmin_${vhost_name}.key":
         ensure => $ensure,
-        mode   => 0644,
+        mode   => '0644',
         source => $ssl_key,
       }
 
