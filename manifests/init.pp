@@ -33,9 +33,16 @@ class phpmyadmin (
   $package_name          = $::phpmyadmin::params::package_name,
   $apache_default_config = $::phpmyadmin::params::apache_default_config,
   $apache_name           = $::apache::params::apache_name,
-)
-inherits ::phpmyadmin::params
-{
+) {
+  include ::phpmyadmin::params
+
+  #Variable validations
+  validate_bool($enabled)
+  validate_array($ip_access_ranges)
+  validate_string($preseed_package)
+  validate_string($package_name)
+  validate_string($apache_default_config)
+  validate_string($apache_name)
 
   #Hacky, but if we want to not break with an already included apache... override mpm
   #If someone knows how to actually get out-of-scope variables to properly inherit

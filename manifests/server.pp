@@ -12,7 +12,7 @@
 #   True to what it sounds like, this sets the ip ranges which are allowed to access phpmyadmin.
 #   These IP ranges can be either a single range or an array.
 # [*properties_iconic*]
-#   Use icons instead of text for the table display of a database (TRUE|FALSE|'both')
+#   Use icons instead of text for the table display of a database (true|false|'both')
 #
 # === Examples
 #
@@ -32,11 +32,18 @@
 define phpmyadmin::server (
   $blowfish_key      = md5("${::fqdn}${::ipaddress}"),
   $resource_collect  = true,
-  $properties_iconic = 'FALSE',
+  $properties_iconic = 'false', 
   $config_file       = $::phpmyadmin::params::config_file,
   $package_name      = $::phpmyadmin::params::package_name,
 ) {
   include ::phpmyadmin::params
+
+  #Variable validations
+  validate_string($blowfish_key)
+  validate_bool($resource_collect)
+  validate_string($properties_iconic)
+  validate_string($config_file)
+  validate_string($package_name)
 
   #Start by generating the config file using a template file
   concat { $config_file:

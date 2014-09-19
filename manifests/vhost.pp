@@ -52,6 +52,19 @@ define phpmyadmin::vhost (
 ) {
   include ::phpmyadmin
 
+  #Variable validations
+  validate_re($ensure, '^present$|^absent$')
+  validate_bool($vhost_enabled)
+  validate_string($priority)
+  validate_absolute_path($docroot)
+  validate_string($aliases)
+  validate_string($vhost_name)
+  validate_bool($ssl)
+  validate_string($ssl_cert)
+  validate_string($ssl_key)
+  validate_absolute_path($conf_dir)
+  validate_absolute_path($conf_dir_enable)
+
   #If SSL is enabled, use 443 port by default
   case $ssl {
     true: {
