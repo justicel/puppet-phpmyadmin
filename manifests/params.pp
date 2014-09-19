@@ -4,6 +4,10 @@
 class phpmyadmin::params {
   include ::apache::params
 
+  #Class defaults
+  $apache_name = $::apache::params::apache_name
+
+  #Per OS variables
   case $::osfamily {
     'RedHat': {
       $package_name          = 'phpMyAdmin'

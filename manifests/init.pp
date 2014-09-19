@@ -32,7 +32,7 @@ class phpmyadmin (
   $preseed_package       = $::phpmyadmin::params::preseed_package,
   $package_name          = $::phpmyadmin::params::package_name,
   $apache_default_config = $::phpmyadmin::params::apache_default_config,
-  $apache_name           = $::apache::params::apache_name,
+  $apache_name           = $::phpmyadmin::params::apache_name,
 ) {
   include ::phpmyadmin::params
 
