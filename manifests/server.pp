@@ -33,20 +33,22 @@ define phpmyadmin::server (
   $blowfish_key      = md5("${::fqdn}${::ipaddress}"),
   $resource_collect  = true,
   $properties_iconic = 'FALSE',
+  $config_file       = $::phpmyadmin::params::config_file,
+  $package_name      = $::phpmyadmin::params::package_name,
 ) {
   include ::phpmyadmin::params
 
   #Start by generating the config file using a template file
-  concat { $::phpmyadmin::params::config_file:
+  concat { $config_file:
     owner   => '0',
     group   => '0',
     mode    => '0644',
-    require => Package[$::phpmyadmin::params::package_name],
+    require => Package[$package_name],
   }
 
   #Default header
   concat::fragment { '00_phpmyadmin_header':
-    target  => $::phpmyadmin::params::config_file,
+    target  => $config_file,
     order   => '01',
     content => template('phpmyadmin/config_header.inc.php.erb'),
   }
@@ -58,7 +60,7 @@ define phpmyadmin::server (
 
   #Footer for the phpmyadmin config
   concat::fragment { '255_phpmyadmin_footer':
-    target  => $::phpmyadmin::params::config_file,
+    target  => $config_file,
     order   => '255',
     content => template('phpmyadmin/config_footer.inc.php.erb'),
   }

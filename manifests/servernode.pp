@@ -32,13 +32,14 @@
 define phpmyadmin::servernode (
   $server_group,
   $myserver_name = $name,
+  $target        = $::phpmyadmin::params::config_file,
 ) {
   include ::phpmyadmin::params
 
   #Generate a server entry for the realized server ON the phpmyadmin server
   concat::fragment { "${server_group}_phpmyadmin_server_${name}":
     order   => "20-${server_group}-${myserver_name}",
-    target  => $::phpmyadmin::params::config_file,
+    target  => $target,
     content => template('phpmyadmin/servernode.erb'),
   }
 

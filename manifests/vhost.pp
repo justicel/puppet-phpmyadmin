@@ -25,7 +25,7 @@
 #   Define a file on the puppet server to be ssl key.
 # === Examples
 #
-#  class { 'phpmyadmin::vhost'
+#  phpmyadmin::vhost { 'phpmyadmin.domain.com':
 #    vhost_name => 'phpmyadmin.domain.com',
 #  }
 #
@@ -38,21 +38,19 @@
 # Copyright 2013 Justice London, unless otherwise noted.
 #
 define phpmyadmin::vhost (
-  $ensure        = present,
-  $vhost_enabled = true,
-  $priority      = '20',
-  $docroot       = $::phpmyadmin::params::doc_path,
-  $aliases       = '',
-  $vhost_name    = $name,
-  $ssl           = false,
-  $ssl_cert      = '',
-  $ssl_key       = '',
+  $ensure          = present,
+  $vhost_enabled   = true,
+  $priority        = '20',
+  $docroot         = $::phpmyadmin::params::doc_path,
+  $aliases         = '',
+  $vhost_name      = $name,
+  $ssl             = false,
+  $ssl_cert        = '',
+  $ssl_key         = '',
+  $conf_dir        = $::apache::params::conf_dir,
+  $conf_dir_enable = $::phpmyadmin::params::site_enable_dir,
 ) {
   include ::phpmyadmin
-
-  #Set some default variables
-  $conf_dir = $::apache::params::conf_dir
-  $conf_dir_enable = $::phpmyadmin::params::site_enable_dir
 
   #If SSL is enabled, use 443 port by default
   case $ssl {

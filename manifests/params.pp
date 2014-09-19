@@ -22,6 +22,7 @@ class phpmyadmin::params {
       $doc_path              = '/usr/share/phpmyadmin'
       $data_dir              = '/var/lib/phpmyadmin'
       $preseed_package       = true
+      $debconf_package       = 'debconf-utils'
     }
     default: {
       fail("Class['phpmyadmin::params']: Unsupported OS: ${::osfamily}")

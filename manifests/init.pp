@@ -27,8 +27,12 @@
 # Copyright 2013 Justice London, unless otherwise noted.
 #
 class phpmyadmin (
-  $enabled          = true,
-  $ip_access_ranges = ["${::network_eth0}/${::netmask_eth0}"],
+  $enabled               = true,
+  $ip_access_ranges      = ["${::network_eth0}/${::netmask_eth0}"],
+  $preseed_package       = $::phpmyadmin::params::preseed_package,
+  $package_name          = $::phpmyadmin::params::package_name,
+  $apache_default_config = $::phpmyadmin::params::apache_default_config,
+  $apache_name           = $::apache::params::apache_name,
 )
 inherits ::phpmyadmin::params
 {
@@ -50,24 +54,24 @@ inherits ::phpmyadmin::params
     default => 'absent',
   }
 
-  if $::phpmyadmin::params::preseed_package {
+  if $preseed_package {
     phpmyadmin::debconf { 'reconfigure-webserver':
       selection  => 'phpmyadmin/reconfigure-webserver',
       value_type => 'multiselect',
       value      => 'apache2',
-      before     => Package[$::phpmyadmin::params::package_name],
+      before     => Package[$package_name],
     }
   }
 
   #Install or remove package based on enable status
-  ensure_packages([$::phpmyadmin::params::package_name], { ensure => $state_select })
+  ensure_packages([$package_name], { ensure => $state_select })
 
   #Default/basic apache config file for phpMyAdmin
-  file { $::phpmyadmin::params::apache_default_config:
+  file { $apache_default_config:
     ensure  => $state_select,
     content => template('phpmyadmin/phpMyAdmin.conf.erb'),
-    require => Package[$::phpmyadmin::params::package_name],
-    notify  => Service[$::apache::params::apache_name],
+    require => Package[$package_name],
+    notify  => Service[$apache_name],
   }
 
 }
