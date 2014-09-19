@@ -38,7 +38,7 @@ class phpmyadmin (
   #Variable validations
   validate_bool($enabled)
   validate_array($ip_access_ranges)
-  validate_string($preseed_package)
+  validate_bool($preseed_package)
   validate_string($package_name)
   validate_string($apache_default_config)
   validate_string($apache_name)
