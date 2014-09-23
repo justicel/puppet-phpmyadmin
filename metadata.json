@@ -1,6 +1,6 @@
 {
   "name": "jlondon-phpmyadmin",
-  "version": "0.2.2",
+  "version": "1.0.0",
   "author": "Justice London",
   "summary": "Puppet phpMyAdmin module",
   "license": "Apache License, Version 2.0",
