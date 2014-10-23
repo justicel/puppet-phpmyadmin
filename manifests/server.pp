@@ -51,6 +51,13 @@ define phpmyadmin::server (
     group   => '0',
     mode    => '0644',
     require => Package[$package_name],
+  } ->
+  file { '/var/lib/phpmyadmin/blowfish_secret.inc.php':
+    ensure  => 'present',
+    owner   => 'root',
+    group   => 'www-data',
+    mode    => '0640',
+    content => template('phpmyadmin/blowfish_secret.inc.php.erb'),
   }
 
   #Default header
