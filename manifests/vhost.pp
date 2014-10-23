@@ -20,9 +20,14 @@
 #   Enable SSL support for the vhost. If enabled we disable phpmyadmin on port 80.
 #
 # [*ssl_cert*]
-#   Define a file on the puppet server to be ssl cert.
+#   The contents of an SSL cert to use in SSL mode
 # [*ssl_key*]
-#   Define a file on the puppet server to be ssl key.
+#   The contents of an SSL key to use in SSL mode
+# [*ssl_cert_file*]
+#   The filepath to use as the SSL cert
+# [*ssl_key_file*]
+#   The filepath to use as the SSL key
+#
 # === Examples
 #
 #  phpmyadmin::vhost { 'phpmyadmin.domain.com':
@@ -47,6 +52,8 @@ define phpmyadmin::vhost (
   $ssl             = false,
   $ssl_cert        = '',
   $ssl_key         = '',
+  $ssl_cert_file   = '',
+  $ssl_key_file    = '',
   $conf_dir        = $::apache::params::conf_dir,
   $conf_dir_enable = $::phpmyadmin::params::site_enable_dir,
 ) {
@@ -71,21 +78,28 @@ define phpmyadmin::vhost (
       #Set vhost port
       $port = '443'
 
-      #Define SSL key files if SSL is enabled
-      file { "${conf_dir}/phpmyadmin_${vhost_name}.crt":
-        ensure => $ensure,
-        mode   => '0644',
-        source => $ssl_cert,
-      }
-      file { "${conf_dir}/phpmyadmin_${vhost_name}.key":
-        ensure => $ensure,
-        mode   => '0644',
-        source => $ssl_key,
+      if $ssl_cert_file == '' {
+        #Define SSL key files if SSL is enabled
+        file { "${conf_dir}/phpmyadmin_${vhost_name}.crt":
+          ensure => $ensure,
+          mode   => '0644',
+          source => $ssl_cert,
+        }
+        $ssl_apache_cert = "${conf_dir}/phpmyadmin_${vhost_name}.crt"
+      } else {
+        $ssl_apache_cert = $ssl_cert_file
       }
 
-      #Define the apache location for vhost
-      $ssl_apache_cert = "${conf_dir}/phpmyadmin_${vhost_name}.crt"
-      $ssl_apache_key  = "${conf_dir}/phpmyadmin_${vhost_name}.key"
+      if $ssl_key_file == '' {
+        file { "${conf_dir}/phpmyadmin_${vhost_name}.key":
+          ensure => $ensure,
+          mode   => '0644',
+          source => $ssl_key,
+        }
+        $ssl_apache_key = "${conf_dir}/phpmyadmin_${vhost_name}.key"
+      } else {
+        $ssl_apache_key = $ssl_key_file
+      }
     }
     default: {
       #Default vhost port
