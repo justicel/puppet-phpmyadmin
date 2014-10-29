@@ -41,6 +41,34 @@ Usage
 	  }
 	}
 
+### SSL Certificates
+
+You can specify SSL certificates in two ways, either by using the `ssl_cert` and `ssl_key` parameters to point to the source files in Puppet:
+
+    phpmyadmin::vhost { 'external.domain.org':
+      vhost_enabled => true,
+      priority      => '30',
+      docroot       => $phpmyadmin::params::doc_path,
+      ssl           => true,
+      ssl_cert      => 'puppet:///modules/phpmyadmin/sslkey/external.domain.org.crt',
+      ssl_key       => 'puppet:///modules/phpmyadmin/sslkey/external.domain.org.private.key',
+    }
+
+Or, if you have already transferred the certificates to the target node by some other means, by using the `ssl_cert_file` and `ssl_key_file` parameters which point to paths on the host machine:
+
+    phpmyadmin::vhost { 'external.domain.org':
+      vhost_enabled => true,
+      priority      => '30',
+      docroot       => $phpmyadmin::params::doc_path,
+      ssl           => true,
+      ssl_cert_file => '/etc/ssl/certs/external.domain.org.crt',
+      ssl_key_file  => '/etc/ssl/certs/external.domain.org.private.key',
+    }
+
+### SSL Redirection
+
+Using the `ssl_redirect` parameter (default: `false`), you can force redirects for the domain from port 80 to port 443.
+
 License
 -------
 
