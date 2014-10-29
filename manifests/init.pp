@@ -6,6 +6,8 @@
 # === Parameters
 # [*enabled*]
 #   Default to true. This sets the package as installed or uninstalled and affects the config as well.
+# [*manage_apache*]
+#   If true, will attempt to install the apache module (default: true)
 # [*ip_access_ranges*]
 #   True to what it sounds like, this sets the ip ranges which are allowed to access phpmyadmin.
 #   These IP ranges can be either a single range or an array. Should be in dotted quad or ipv6
@@ -28,6 +30,7 @@
 #
 class phpmyadmin (
   $enabled               = true,
+  $manage_apache         = true,
   $ip_access_ranges      = ["${::network_eth0}/${::netmask_eth0}"],
   $preseed_package       = $::phpmyadmin::params::preseed_package,
   $package_name          = $::phpmyadmin::params::package_name,
@@ -37,6 +40,7 @@ class phpmyadmin (
 
   #Variable validations
   validate_bool($enabled)
+  validate_bool($manage_apache)
   validate_array($ip_access_ranges)
   validate_bool($preseed_package)
   validate_string($package_name)
@@ -46,7 +50,7 @@ class phpmyadmin (
   #Hacky, but if we want to not break with an already included apache... override mpm
   #If someone knows how to actually get out-of-scope variables to properly inherit
   #let me know.
-  if !defined(Class['::apache']) {
+  if $manage_apache == true and !defined(Class['::apache']) {
     class { '::apache':
       mpm_module => 'prefork',
     }

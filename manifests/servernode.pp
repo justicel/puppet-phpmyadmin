@@ -8,6 +8,10 @@
 #   It default to the defined resource name
 # [*server_group*]
 #   If used as a defined resource, this will be used to select which servers to install for a specific phpmyadmin instance.
+# [*verbose_name*]
+#   The name which will appear in the list of servers (default: $name)
+# [*hide_db*]
+#   A regex describing the database names to hide (default: '')
 #
 # === Examples
 #
@@ -32,6 +36,8 @@
 define phpmyadmin::servernode (
   $server_group,
   $myserver_name = $name,
+  $verbose_name  = $name,
+  $hide_db       = '',
   $target        = $::phpmyadmin::params::config_file,
 ) {
   include ::phpmyadmin::params

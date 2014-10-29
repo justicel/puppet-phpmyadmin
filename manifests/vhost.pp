@@ -18,6 +18,8 @@
 #   You can set a name for the vhost entry. This defaults to phpdb.$::domain
 # [*ssl*]
 #   Enable SSL support for the vhost. If enabled we disable phpmyadmin on port 80.
+# [*ssl_redirect*]
+#   If true, redirects 80 -> 443 (default: false)
 #
 # [*ssl_cert*]
 #   The contents of an SSL cert to use in SSL mode
@@ -50,6 +52,7 @@ define phpmyadmin::vhost (
   $aliases         = '',
   $vhost_name      = $name,
   $ssl             = false,
+  $ssl_redirect    = false,
   $ssl_cert        = '',
   $ssl_key         = '',
   $ssl_cert_file   = '',
@@ -64,9 +67,9 @@ define phpmyadmin::vhost (
   validate_bool($vhost_enabled)
   validate_string($priority)
   validate_absolute_path($docroot)
-  validate_string($aliases)
   validate_string($vhost_name)
   validate_bool($ssl)
+  validate_bool($ssl_redirect)
   validate_string($ssl_cert)
   validate_string($ssl_key)
   validate_absolute_path($conf_dir)
@@ -99,6 +102,22 @@ define phpmyadmin::vhost (
         $ssl_apache_key = "${conf_dir}/phpmyadmin_${vhost_name}.key"
       } else {
         $ssl_apache_key = $ssl_key_file
+      }
+
+      if $ssl_redirect == true {
+        apache::vhost { "${vhost_name}-http":
+          ensure        => $ensure,
+          docroot       => $docroot,
+          priority      => $priority,
+          port          => 80,
+          servername    => $vhost_name,
+          serveraliases => $aliases,
+          rewrites      => [{
+            comment      => 'Redirect to HTTPS',
+            rewrite_cond => ['%{HTTPS} off'],
+            rewrite_rule => ['(.*) https://%{HTTP_HOST}%{REQUEST_URI}'],
+          }],
+        }
       }
     }
     default: {
