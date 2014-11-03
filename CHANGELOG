@@ -1,3 +1,15 @@
+2014-11-03 - Version 1.0.1
+
+Summary: Added ability to specify using a local SSL file instead of puppet
+master content and added SSL redirect ability.
+
+Bugfixes:
+- Removed string validation of aliases, can be array.
+- Added bool to allow user to install/not install apache.
+
+Contributions/Thanks:
+Joe Ray (Thanks!)
+
 2014-09-19 - Version 0.2.2
 
 Summary: Small bug-fixes and greater support for hiera integration with
