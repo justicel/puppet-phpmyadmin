@@ -1,3 +1,6 @@
+2015-06-04 - Version 1.2.0
+Added option to disable mod_securtity for phpMyAdmin in Hiera.
+
 2014-11-03 - Version 1.0.1
 
 Summary: Added ability to specify using a local SSL file instead of puppet
@@ -26,7 +29,7 @@ hiera support.
 Summary: Re-engaging support for this module. Please submit any bug reports or
 pull requests directly to the github project!
 
-Bugfixes: 
+Bugfixes:
 - Properly support direct installation of module without needing to define
 apache or php configuration on node.
 - Lots of lint fixes and param-level cleanup

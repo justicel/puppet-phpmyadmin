@@ -6,6 +6,7 @@ class phpmyadmin::params {
 
   #Class defaults
   $apache_name = $::apache::params::apache_name
+  $disable_mod_security = hiera('phpmyadmin::disable_mod_security', false)
 
   #Per OS variables
   case $::osfamily {
@@ -32,5 +33,4 @@ class phpmyadmin::params {
       fail("Class['phpmyadmin::params']: Unsupported OS: ${::osfamily}")
     }
   }
-
 }
