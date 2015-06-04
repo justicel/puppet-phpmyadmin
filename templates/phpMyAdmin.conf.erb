@@ -84,7 +84,7 @@ Alias /phpmyadmin <%= @doc_path %>
    </IfModule>
 </Directory>
 
-<% if disable_mod_security %>
+<% if @disable_mod_security == true %>
 # This configuration prevents mod_security at phpMyAdmin directories from
 # filtering SQL etc.  This may break your mod_security implementation.
 <IfModule mod_security.c>
