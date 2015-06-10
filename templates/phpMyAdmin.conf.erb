@@ -1,7 +1,7 @@
 # Managed by Puppet
 #
 # phpMyAdmin - Web based MySQL browser written in php
-# 
+#
 # Allows only localhost by default
 #
 # But allowing phpMyAdmin to anyone other than localhost should be considered
@@ -58,7 +58,7 @@ Alias /phpmyadmin <%= @doc_path %>
    <IfModule !mod_authz_core.c>
         Order Deny,Allow
         Deny from All
-        Allow from None   
+        Allow from None
    </IfModule>
 </Directory>
 
@@ -84,11 +84,17 @@ Alias /phpmyadmin <%= @doc_path %>
    </IfModule>
 </Directory>
 
+<% if @disable_mod_security == true %>
 # This configuration prevents mod_security at phpMyAdmin directories from
 # filtering SQL etc.  This may break your mod_security implementation.
-#
-#<IfModule mod_security.c>
-#    <Directory <%= @doc_path %>/>
-#        SecRuleInheritance Off
-#    </Directory>
-#</IfModule>
+<IfModule mod_security.c>
+  <Directory <%= @doc_path %>/>
+    SecRuleInheritance Off
+  </Directory>
+</IfModule>
+<IfModule mod_security2.c>
+  <Directory <%= @doc_path %>/>
+    SecRuleEngine Off
+  </Directory>
+</IfModule>
+<% end %>
