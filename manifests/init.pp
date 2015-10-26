@@ -31,6 +31,7 @@
 class phpmyadmin (
   $enabled               = true,
   $manage_apache         = true,
+  $manage_config         = true,
   $ip_access_ranges      = ["${::network_eth0}/${::netmask_eth0}"],
   $preseed_package       = $::phpmyadmin::params::preseed_package,
   $package_name          = $::phpmyadmin::params::package_name,
@@ -55,7 +56,9 @@ class phpmyadmin (
       mpm_module => 'prefork',
     }
     include ::apache::mod::php
+  }
 
+  if $manage_config == true {
     #Default/basic apache config file for phpMyAdmin
     file { $apache_default_config:
       ensure  => $state_select,
