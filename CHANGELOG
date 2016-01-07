@@ -1,5 +1,9 @@
-2015-06-04 - Version 1.2.0
-Added option to disable mod_securtity for phpMyAdmin in Hiera.
+2016-01-06 - Version 1.2.0
+- Moved Blowfish secret to separate config file to prevent secret leaking (Joe
+Ray)
+- SSL CA can be defined in vhost (Joe Ray)
+- Small bugfix to force template file link (Simon Tremblay)
+- Added option to disable mod_security for phpMyAdmin in Hiera
 
 2014-11-03 - Version 1.0.1
 
