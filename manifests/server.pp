@@ -34,6 +34,8 @@ define phpmyadmin::server (
   $resource_collect  = true,
   $properties_iconic = 'FALSE',
   $config_file       = $::phpmyadmin::params::config_file,
+  $data_dir          = $::phpmyadmin::params::data_dir,
+  $apache_group      = $::phpmyadmin::params::apache_group,
   $package_name      = $::phpmyadmin::params::package_name,
 ) {
   include ::phpmyadmin::params
@@ -42,7 +44,9 @@ define phpmyadmin::server (
   validate_string($blowfish_key)
   validate_bool($resource_collect)
   validate_string($properties_iconic)
-  validate_string($config_file)
+  validate_absolute_path($config_file)
+  validate_absolute_path($data_dir)
+  validate_string($apache_group)
   validate_string($package_name)
 
   #Start by generating the config file using a template file
@@ -52,10 +56,10 @@ define phpmyadmin::server (
     mode    => '0644',
     require => Package[$package_name],
   } ->
-  file { '/var/lib/phpmyadmin/blowfish_secret.inc.php':
+  file { "${data_dir}/blowfish_secret.inc.php":
     ensure  => 'present',
     owner   => 'root',
-    group   => 'www-data',
+    group   => $apache_group,
     mode    => '0640',
     content => template('phpmyadmin/blowfish_secret.inc.php.erb'),
   }
