@@ -63,7 +63,6 @@ class phpmyadmin (
     file { $apache_default_config:
       ensure  => $state_select,
       content => template('phpmyadmin/phpMyAdmin.conf.erb'),
-      force   => true,
       require => Package[$package_name],
       notify  => Service[$apache_name],
     }
