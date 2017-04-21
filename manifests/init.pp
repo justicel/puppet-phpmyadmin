@@ -59,20 +59,20 @@ class phpmyadmin (
   }
 
   if $manage_config == true {
-    #Default/basic apache config file for phpMyAdmin
-    file { $apache_default_config:
-      ensure  => $state_select,
-      content => template('phpmyadmin/phpMyAdmin.conf.erb'),
-      require => Package[$package_name],
-      notify  => Service[$apache_name],
+    $enabledt = str2bool($enabled)
+    #Define present/absent for enabled state (true/false)
+    $state_select = $enabledt ? {
+      true    => 'present',
+      default => 'absent',
     }
   }
 
-  $enabledt = str2bool($enabled)
-  #Define present/absent for enabled state (true/false)
-  $state_select = $enabledt ? {
-    true    => 'present',
-    default => 'absent',
+  #Default/basic apache config file for phpMyAdmin
+  file { $apache_default_config:
+    ensure  => present,
+    content => template('phpmyadmin/phpMyAdmin.conf.erb'),
+    require => Package[$package_name],
+    notify  => Service[$apache_name],
   }
 
   if $preseed_package {
@@ -86,4 +86,5 @@ class phpmyadmin (
 
   #Install or remove package based on enable status
   ensure_packages([$package_name], { ensure => $state_select })
+
 }
