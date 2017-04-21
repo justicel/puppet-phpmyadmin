@@ -60,8 +60,8 @@ define phpmyadmin::server (
     group   => '0',
     mode    => '0644',
     require => Package[$package_name],
-  } ->
-  file { "${data_dir}/blowfish_secret.inc.php":
+  }
+  -> file { "${data_dir}/blowfish_secret.inc.php":
     ensure  => 'present',
     owner   => 'root',
     group   => $apache_group,
