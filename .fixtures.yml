@@ -1,0 +1,8 @@
+---
+fixtures:
+  repositories:
+    stdlib: "https://github.com/puppetlabs/puppetlabs-stdlib"
+    concat: "https://github.com/puppetlabs/puppetlabs-concat"
+    apache: "https://github.com/puppetlabs/puppetlabs-apache"
+  symlinks:
+    phpmyadmin: '#{source_dir}'

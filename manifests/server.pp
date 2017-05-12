@@ -13,6 +13,9 @@
 #   These IP ranges can be either a single range or an array.
 # [*properties_iconic*]
 #   Use icons instead of text for the table display of a database (TRUE|FALSE|'both')
+# [*absolute_uri*]
+#   Defines the URL under which phpMyAdmin is accessible from the users browser.
+#   Complete the variable below with the full URL in the style of <schema>://<server>[:<port>][/<path>] - like http://example.com:8080/phpMyAdmin/. Usually needed for a Reverse Proxy
 #
 # === Examples
 #
@@ -33,6 +36,7 @@ define phpmyadmin::server (
   $blowfish_key      = md5("${::fqdn}${::ipaddress}"),
   $resource_collect  = true,
   $properties_iconic = 'FALSE',
+  $absolute_uri      = "http://${::fqdn}/phpmyadmin/",
   $config_file       = $::phpmyadmin::params::config_file,
   $data_dir          = $::phpmyadmin::params::data_dir,
   $apache_group      = $::phpmyadmin::params::apache_group,
@@ -42,6 +46,7 @@ define phpmyadmin::server (
 
   #Variable validations
   validate_string($blowfish_key)
+  validate_string($absolute_uri)
   validate_bool($resource_collect)
   validate_string($properties_iconic)
   validate_absolute_path($config_file)
@@ -55,8 +60,8 @@ define phpmyadmin::server (
     group   => '0',
     mode    => '0644',
     require => Package[$package_name],
-  } ->
-  file { "${data_dir}/blowfish_secret.inc.php":
+  }
+  -> file { "${data_dir}/blowfish_secret.inc.php":
     ensure  => 'present',
     owner   => 'root',
     group   => $apache_group,
@@ -73,7 +78,9 @@ define phpmyadmin::server (
 
   #Gather all server node resources
   if $resource_collect == true {
-    Phpmyadmin::Servernode <<| server_group == $name |>>
+    Phpmyadmin::Servernode <<| server_group == $name |>> {
+      target => $config_file,
+    }
   }
 
   #Footer for the phpmyadmin config

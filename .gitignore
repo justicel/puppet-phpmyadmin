@@ -1,1 +1,18 @@
 pkg/
+
+# Generated directory for coverage results
+coverage/
+
+# Gem & bundler related files we do not want persisted to the repository
+Gemfile.lock
+.bundle
+vendor/
+
+# Used by rake spec, for temp modules and other test requirements
+spec/fixtures/
+log/
+junit/
+
+# RVM files that are specific to developers implementation
+.ruby-version
+.ruby-gemset
