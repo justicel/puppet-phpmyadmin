@@ -1,8 +1,14 @@
 ---
 fixtures:
   repositories:
-    stdlib: "https://github.com/puppetlabs/puppetlabs-stdlib"
-    concat: "https://github.com/puppetlabs/puppetlabs-concat"
-    apache: "https://github.com/puppetlabs/puppetlabs-apache"
+    stdlib:
+      repo: 'https://github.com/puppetlabs/puppetlabs-stdlib'
+      ref: '4.17.0'
+    apache:
+      repo: 'https://github.com/puppetlabs/puppetlabs-apache'
+      ref: '1.9.0'
+    concat:
+      repo: 'https://github.com/puppetlabs/puppetlabs-concat'
+      ref: '4.0.0'
   symlinks:
     phpmyadmin: '#{source_dir}'
